@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table
 public class Customer {
@@ -14,15 +16,19 @@ public class Customer {
 	@Id
 //	@GeneratedValue(strategy = GenerationType.AUTO)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(notes = "Generated customer ID")
 	private int cid;
 	
 	@NotNull
+    @ApiModelProperty(notes = "Firstname")
 	private String firstname;
 	
 	@NotNull
+    @ApiModelProperty(notes = "Lastname")	
 	private String lastname;
 	
 	@NotNull
+    @ApiModelProperty(notes = "Password")	
 	private String password;
 
 	public int getCid() {

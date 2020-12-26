@@ -28,14 +28,28 @@ import javax.persistence.EntityNotFoundException;
 import com.pay.customer.model.Customer;
 import com.pay.customer.repo.CustomerRespository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/cst")
+@Api(value="Customer", description="Customer details")
 public class CustomerController {
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	CustomerService customerservice;
 
+    @ApiOperation(value = "View a list of Customers",response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
 	@GetMapping("/customers")
 	public ResponseEntity<?> getCustomers() throws ResourceNotFoundException, CustomerServiceException{
 	   LOGGER.info("Details of all customers");
@@ -46,7 +60,7 @@ public class CustomerController {
 	   return new ResponseEntity<>(lstcust, HttpStatus.OK);
 	}
 	
-	
+    @ApiOperation(value = "Add a Customer")
 	@PostMapping(value = "/customer")
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer)
 	{
@@ -54,6 +68,7 @@ public class CustomerController {
 		return new ResponseEntity<Customer>(customerservice.addCustomer(customer), HttpStatus.OK);
 	}
 	
+    @ApiOperation(value = "Delete a customer")
 	@DeleteMapping("/customer/{id}")
 	public ResponseEntity<?> deleteCus(@PathVariable(value = "id") Integer cusid) {
 		LOGGER.info("Delete customer");
@@ -73,6 +88,7 @@ public class CustomerController {
 		return new ResponseEntity<>("Deleted", HttpStatus.OK);
 	}
 	
+    @ApiOperation(value = "Customer a customer id")
 	@GetMapping(value = "/customer/{id}") 
 	public ResponseEntity<Customer> getCustomerById (@PathVariable("id") int cusid)
 	{
